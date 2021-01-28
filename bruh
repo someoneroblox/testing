@@ -3,7 +3,7 @@ local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 -- services
-local input = game:GetService("UserInputService")
+local UserInputService = game:GetService("UserInputService")
 local run = game:GetService("RunService")
 local tween = game:GetService("TweenService")
 local heartbeat = game:GetService("RunService").Heartbeat;
@@ -111,7 +111,7 @@ do
 		self.keybinds = {}
 		self.ended = {}
 		
-		input.InputBegan:Connect(function(key)
+		UserInputService.InputBegan:Connect(function(key)
 			if self.keybinds[key.KeyCode] then
 				for i, bind in pairs(self.keybinds[key.KeyCode]) do
 					bind()
@@ -119,7 +119,7 @@ do
 			end
 		end)
 		
-		input.InputEnded:Connect(function(key)
+		UserInputService.InputEnded:Connect(function(key)
 			if key.UserInputType == Enum.UserInputType.MouseButton1 then
 				for i, callback in pairs(self.ended) do
 					callback()
@@ -156,46 +156,44 @@ do
 		
 		return key
 	end
-	
-	local UserInputService = game:GetService("UserInputService")
  
-local gui = script.Parent
+	local gui = script.Parent
  
-local dragging
-local dragInput
-local dragStart
-local startPos
+	local dragging
+	local dragInput
+	local dragStart
+	local startPos
  
-local function update(input)
-    local delta = input.Position - dragStart
-    gui.Position = gui:TweenPosition(UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y), 'Out', 'Linear', 0, true); -- drag speed
-end
+	local function update(input)
+    	local delta = input.Position - dragStart
+    	gui.Position = gui:TweenPosition(UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y), 'Out', 'Linear', 0, true); -- drag speed
+	end
  
-gui.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = gui.Position
+	gui.InputBegan:Connect(function(input)
+    	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        	dragging = true
+        	dragStart = input.Position
+        	startPos = gui.Position
         
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
+        	input.Changed:Connect(function()
+            	if input.UserInputState == Enum.UserInputState.End then
+                	dragging = false
+            	end
+        	end)
+    	end
+	end)
  
-gui.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
+	gui.InputChanged:Connect(function(input)
+    	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        	dragInput = input
+    	end
+	end)
  
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
-    end
-end)
+	UserInputService.InputChanged:Connect(function(input)
+    	if input == dragInput and dragging then
+        	update(input)
+    	end
+	end)
 
 	function utility:DraggingEnded(callback)
 		table.insert(self.ended, callback)
